@@ -1,0 +1,13 @@
+{
+  "short_name": "New Koshi",
+  "name": "न्यू कोशी सुपर यातायात प्रा. लि.",
+  "icons": [
+    { "src": "/logo.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/logo.png", "sizes": "512x512",  "type": "image/png" }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#1e3a8a",
+  "background_color": "#f0f4f8",
+  "description": "Online bus ticket booking — Kathmandu ↔ Dharan, Nepal"
+}

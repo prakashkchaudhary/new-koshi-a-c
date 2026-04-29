@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: #f0f4f8;
+  color: #1a202c;
+  scroll-behavior: smooth;
+}
+
+/* ── Seat Styles ─────────────────────────────────────────── */
+.seat {
+  @apply w-10 h-10 rounded-t-xl border-2 cursor-pointer transition-all duration-200 flex items-center justify-center text-xs font-bold select-none;
+}
+.seat-available {
+  @apply bg-emerald-50 border-emerald-400 text-emerald-700 hover:bg-emerald-100 hover:scale-110 hover:shadow-md;
+}
+.seat-selected {
+  @apply bg-blue-600 border-blue-700 text-white scale-110 shadow-lg shadow-blue-200;
+}
+.seat-booked {
+  @apply bg-red-50 border-red-300 text-red-400 cursor-not-allowed opacity-60;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+/* ── Glass Card ──────────────────────────────────────────── */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ── Gradient Text ───────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, #1e40af, #3b82f6, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-gold {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Hero Gradient ───────────────────────────────────────── */
+.hero-gradient {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 40%, #1d4ed8 70%, #0369a1 100%);
+}
+
+/* ── Card Hover ──────────────────────────────────────────── */
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-2xl hover:-translate-y-2;
+}
+
+/* ── Spinner ─────────────────────────────────────────────── */
+.spinner {
+  border: 3px solid rgba(255,255,255,0.2);
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ── Animations ──────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.7; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+.animate-fade-in-up  { animation: fadeInUp 0.6s ease-out forwards; }
+.animate-fade-in     { animation: fadeIn 0.5s ease-out forwards; }
+.animate-slide-left  { animation: slideInLeft 0.6s ease-out forwards; }
+.animate-float       { animation: float 3s ease-in-out infinite; }
+.animate-pulse-slow  { animation: pulse-slow 2s ease-in-out infinite; }
+
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+
+/* ── Button Styles ───────────────────────────────────────── */
+.btn-primary {
+  @apply bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold px-6 py-3 rounded-xl
+         hover:from-blue-700 hover:to-blue-800 transition-all duration-200
+         shadow-lg shadow-blue-200 hover:shadow-xl hover:shadow-blue-300 hover:-translate-y-0.5
+         active:translate-y-0;
+}
+.btn-gold {
+  @apply bg-gradient-to-r from-amber-400 to-orange-400 text-gray-900 font-bold px-6 py-3 rounded-xl
+         hover:from-amber-500 hover:to-orange-500 transition-all duration-200
+         shadow-lg shadow-amber-200 hover:shadow-xl hover:-translate-y-0.5
+         active:translate-y-0;
+}
+.btn-outline {
+  @apply border-2 border-white/40 text-white font-semibold px-6 py-3 rounded-xl
+         hover:bg-white/10 transition-all duration-200 backdrop-blur-sm;
+}
+
+/* ── Input Styles ────────────────────────────────────────── */
+.input-field {
+  @apply w-full border border-gray-200 rounded-xl px-4 py-3 bg-white
+         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+         text-gray-700 placeholder-gray-400 transition-all duration-200
+         hover:border-gray-300;
+}
+
+/* ── Section Title ───────────────────────────────────────── */
+.section-title {
+  @apply text-3xl md:text-4xl font-black text-gray-900 mb-3;
+  font-family: 'Poppins', sans-serif;
+}
+.section-subtitle {
+  @apply text-gray-500 text-lg mb-10;
+}
+
+/* ── Ticket Dashed Border ────────────────────────────────── */
+.ticket-dash {
+  background-image: repeating-linear-gradient(
+    90deg, #e2e8f0 0, #e2e8f0 8px, transparent 8px, transparent 16px
+  );
+  height: 2px;
+}
+
+/* ── Route Badge ─────────────────────────────────────────── */
+.route-badge {
+  @apply inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-semibold
+         px-3 py-1 rounded-full border border-blue-100;
+}
+
+/* ── Status Badge ────────────────────────────────────────── */
+.badge-confirmed { @apply bg-emerald-100 text-emerald-700 border border-emerald-200; }
+.badge-cancelled { @apply bg-red-100 text-red-700 border border-red-200; }
+.badge-pending   { @apply bg-amber-100 text-amber-700 border border-amber-200; }
