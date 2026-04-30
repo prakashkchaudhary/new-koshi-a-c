@@ -23,13 +23,17 @@ app.use(helmet({
 // ── CORS ──────────────────────────────────────────────────
 const allowedOrigins = [
   'http://localhost:3000',
+  'https://new-koshi-a-c-three.vercel.app',
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
+    // Allow requests with no origin (Render health checks, mobile apps)
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) return callback(null, true);
+    // Allow any vercel.app subdomain for preview deployments
+    if (origin.endsWith('.vercel.app')) return callback(null, true);
     callback(new Error(`CORS blocked: ${origin}`));
   },
   credentials: true,
