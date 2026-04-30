@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 const AdminSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
 
   const handleLogout = () => {
     logout();
