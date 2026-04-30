@@ -16,7 +16,8 @@ const app = express();
 
 // ── Security Headers (helmet) ─────────────────────────────
 app.use(helmet({
-  crossOriginResourcePolicy: { policy: 'cross-origin' } // allow images to load cross-origin
+  crossOriginResourcePolicy: { policy: 'cross-origin' }, // allow images cross-origin
+  contentSecurityPolicy: false, // CSP handled by frontend (would block backend images)
 }));
 
 // ── CORS ──────────────────────────────────────────────────
