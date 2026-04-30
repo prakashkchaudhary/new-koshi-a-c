@@ -11,10 +11,14 @@ const generateToken = (id) => {
 
 // POST /api/auth/register
 router.post('/register', [
-  body('name').trim().isLength({ min: 2 }).withMessage('Name must be at least 2 characters'),
+  body('name').trim().isLength({ min: 2, max: 50 }).withMessage('Name must be 2-50 characters'),
   body('email').isEmail().normalizeEmail().withMessage('Valid email is required'),
-  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-  body('phone').notEmpty().withMessage('Phone number is required')
+  body('password')
+    .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
+    .matches(/[A-Za-z]/).withMessage('Password must contain at least one letter')
+    .matches(/[0-9]/).withMessage('Password must contain at least one number'),
+  body('phone').trim().notEmpty().withMessage('Phone number is required')
+    .isLength({ max: 20 }).withMessage('Phone number too long')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -44,7 +48,8 @@ router.post('/register', [
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error('Register error:', error.message);
+    res.status(500).json({ success: false, message: 'Registration failed. Please try again.' });
   }
 });
 
@@ -62,6 +67,7 @@ router.post('/login', [
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
+    // Use same message for both wrong email and wrong password (prevents user enumeration)
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ success: false, message: 'Invalid email or password' });
     }
@@ -79,13 +85,23 @@ router.post('/login', [
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error('Login error:', error.message);
+    res.status(500).json({ success: false, message: 'Login failed. Please try again.' });
   }
 });
 
 // GET /api/auth/me
 router.get('/me', protect, async (req, res) => {
-  res.json({ success: true, user: req.user });
+  res.json({
+    success: true,
+    user: {
+      id: req.user._id,
+      name: req.user.name,
+      email: req.user.email,
+      phone: req.user.phone,
+      role: req.user.role
+    }
+  });
 });
 
 module.exports = router;
