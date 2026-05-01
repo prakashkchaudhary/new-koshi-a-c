@@ -12,8 +12,6 @@ const defaultForm = {
 };
 
 // ── Seat Layout Builder ───────────────────────────────────
-const SeatLayoutBuilder = ({ totalSeats, blockedSeats, onChange }) => {
-// ── Seat Layout Builder ───────────────────────────────────
 const SeatLayoutBuilder = ({ totalSeats, blockedSeats, onChange, isSleeper }) => {
   const rowLabels = 'ABCDEFGHIJKLMNOP'.split('');
   const seatsPerRow = isSleeper ? 4 : 4; // 4 berths or 4 seats
