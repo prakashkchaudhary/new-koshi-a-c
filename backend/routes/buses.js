@@ -76,7 +76,11 @@ router.post('/', protect, adminOnly, upload.single('image'), async (req, res) =>
       busType: String(busType || 'AC Sleeper').slice(0, 100)
     };
 
-    if (req.file) busData.image = `/uploads/${req.file.filename}`;
+    if (req.file) {
+      busData.image = `/uploads/${req.file.filename}`;
+    } else if (req.body.imageUrl) {
+      busData.image = req.body.imageUrl;
+    }
 
     const bus = await Bus.create(busData);
     res.status(201).json({ success: true, message: 'Bus added successfully', bus });
@@ -108,7 +112,11 @@ router.put('/:id', protect, adminOnly, upload.single('image'), async (req, res) 
     if (amenities) updateData.amenities = safeJsonParse(amenities, ['AC']);
     if (busType) updateData.busType = String(busType).slice(0, 100);
     if (isActive !== undefined) updateData.isActive = isActive === 'true' || isActive === true;
-    if (req.file) updateData.image = `/uploads/${req.file.filename}`;
+    if (req.file) {
+      updateData.image = `/uploads/${req.file.filename}`;
+    } else if (req.body.imageUrl) {
+      updateData.image = req.body.imageUrl;
+    }
 
     const bus = await Bus.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });
     if (!bus) return res.status(404).json({ success: false, message: 'Bus not found' });
