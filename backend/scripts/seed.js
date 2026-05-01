@@ -19,10 +19,10 @@ const seedData = async () => {
 
     // Create admin user
     const admin = await User.create({
-      name: 'Admin',
-      email: process.env.ADMIN_EMAIL || 'admin@busservice.com',
-      password: process.env.ADMIN_PASSWORD || 'admin123',
-      phone: '+880 1700-111111',
+      name: 'Prakash Chaudhary',
+      email: process.env.ADMIN_EMAIL || 'prakashchaudhary92290@gmail.com',
+      password: process.env.ADMIN_PASSWORD || 'prakash@92290',
+      phone: '+977-9800000000',
       role: 'admin'
     });
     console.log('Admin created:', admin.email);
