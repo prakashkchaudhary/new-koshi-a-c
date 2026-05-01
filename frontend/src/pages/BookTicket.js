@@ -160,7 +160,7 @@ const BookTicket = () => {
                 </div>
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-gray-500">Price per seat</span>
-                  <span className="font-medium text-gray-700">৳{bus.price}</span>
+                  <span className="font-medium text-gray-700">रू {bus.price}</span>
                 </div>
               </div>
 
@@ -169,7 +169,7 @@ const BookTicket = () => {
               {/* Total */}
               <div className="flex justify-between items-center mb-6">
                 <span className="font-bold text-gray-900 text-lg">Total</span>
-                <span className="font-black text-2xl text-blue-700">৳{totalPrice}</span>
+                <span className="font-black text-2xl text-blue-700">रू {totalPrice}</span>
               </div>
 
               {/* Book Button */}

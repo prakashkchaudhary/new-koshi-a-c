@@ -99,7 +99,7 @@ const MyBookings = () => {
                             <p className="text-xs text-gray-400">Ticket ID</p>
                             <p className="font-mono font-bold text-gray-700 text-sm">{booking.ticketId}</p>
                           </div>
-                          <p className="text-2xl font-black text-blue-700">৳{booking.totalPrice}</p>
+                          <p className="text-2xl font-black text-blue-700">रू {booking.totalPrice}</p>
                           <div className="flex space-x-2">
                             <Link
                               to={`/booking-confirmation/${booking._id}`}

@@ -63,7 +63,7 @@ const Dashboard = () => {
           <StatCard title="Total Buses" value={stats.buses} icon="🚌" color="border-blue-500" />
           <StatCard title="Total Bookings" value={stats.bookings} icon="🎫" color="border-green-500" />
           <StatCard title="Confirmed" value={stats.confirmed || 0} icon="✅" color="border-yellow-500" />
-          <StatCard title="Revenue (৳)" value={`৳${(stats.revenue || 0).toLocaleString()}`} icon="💰" color="border-purple-500" />
+          <StatCard title="Revenue (रू)" value={`रू ${(stats.revenue || 0).toLocaleString()}`} icon="💰" color="border-purple-500" />
         </div>
 
         {/* Recent Bookings */}
@@ -98,7 +98,7 @@ const Dashboard = () => {
                         {booking.busId?.route?.from} → {booking.busId?.route?.to}
                       </td>
                       <td className="py-3 px-4 text-gray-600">{booking.seats?.join(', ')}</td>
-                      <td className="py-3 px-4 font-bold text-blue-700">৳{booking.totalPrice}</td>
+                      <td className="py-3 px-4 font-bold text-blue-700">रू {booking.totalPrice}</td>
                       <td className="py-3 px-4">
                         <span className={`text-xs px-2 py-1 rounded-full font-semibold ${
                           booking.status === 'confirmed' ? 'bg-green-100 text-green-700' :

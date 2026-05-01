@@ -141,7 +141,7 @@ const Buses = () => {
                         <p>{bus.departureTime}</p>
                         <p className="text-gray-400 text-xs">{bus.arrivalTime}</p>
                       </td>
-                      <td className="py-4 px-6 font-bold text-blue-700">৳{bus.price}</td>
+                      <td className="py-4 px-6 font-bold text-blue-700">रू {bus.price}</td>
                       <td className="py-4 px-6 text-gray-600">
                         {bus.totalSeats - bus.bookedSeats.length}/{bus.totalSeats}
                       </td>
@@ -216,7 +216,7 @@ const Buses = () => {
                       className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500" required />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Price (৳) *</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Price (रू) *</label>
                     <input type="number" value={form.price} onChange={e => setForm({ ...form, price: e.target.value })}
                       className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500" required min="0" />
                   </div>

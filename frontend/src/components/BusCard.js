@@ -127,7 +127,7 @@ const BusCard = ({ bus }) => {
           <div>
             <span className="text-xs text-gray-400 font-medium">Price per seat</span>
             <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-black text-blue-700">Rs. {bus.price.toLocaleString()}</span>
+              <span className="text-2xl font-black text-blue-700">रू {bus.price.toLocaleString()}</span>
             </div>
           </div>
           <Link to={`/book/${bus._id}`}

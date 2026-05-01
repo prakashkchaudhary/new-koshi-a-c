@@ -133,11 +133,11 @@ const BookingConfirmation = () => {
             <div className="flex justify-between items-center bg-blue-900 text-white rounded-xl p-4">
               <div>
                 <p className="text-blue-200 text-xs">TOTAL AMOUNT</p>
-                <p className="text-2xl font-black">৳{booking.totalPrice}</p>
+                <p className="text-2xl font-black">रू {booking.totalPrice}</p>
               </div>
               <div className="text-right">
                 <p className="text-blue-200 text-xs">{booking.seats.length} seat(s)</p>
-                <p className="text-sm">৳{bus?.price} × {booking.seats.length}</p>
+                <p className="text-sm">रू {bus?.price} × {booking.seats.length}</p>
               </div>
             </div>
           </div>

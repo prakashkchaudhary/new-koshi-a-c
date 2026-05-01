@@ -89,15 +89,15 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3">
                 <span className="text-amber-400 flex-shrink-0">📞</span>
-                <a href="tel:+9779800000000" className="text-sm hover:text-amber-400 transition-colors">
-                  +977 9800-000000
+                <a href="tel:+9779814757612" className="text-sm hover:text-amber-400 transition-colors">
+                  +977 9814757612
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <span className="text-amber-400 flex-shrink-0">✉️</span>
-                <a href="mailto:info@newkoshiyatayat.com"
+                <a href="mailto:newkoshiac@gmail.com"
                    className="text-sm hover:text-amber-400 transition-colors">
-                  info@newkoshiyatayat.com
+                  newkoshiac@gmail.com
                 </a>
               </li>
               <li className="flex items-center gap-3">

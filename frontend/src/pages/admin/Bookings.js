@@ -88,7 +88,7 @@ const Bookings = () => {
                         {new Date(booking.travelDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </td>
                       <td className="py-4 px-6 text-gray-600">{booking.seats?.join(', ')}</td>
-                      <td className="py-4 px-6 font-bold text-blue-700">৳{booking.totalPrice}</td>
+                      <td className="py-4 px-6 font-bold text-blue-700">रू {booking.totalPrice}</td>
                       <td className="py-4 px-6">
                         <span className={`text-xs px-2 py-1 rounded-full font-semibold ${
                           booking.status === 'confirmed' ? 'bg-green-100 text-green-700' :
