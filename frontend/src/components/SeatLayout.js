@@ -1,116 +1,160 @@
 import React from 'react';
 
-const SeatLayout = ({ totalSeats, bookedSeats, selectedSeats, onSeatClick }) => {
-  // Generate seat IDs: rows A-J (10 rows), 4 seats per row = 40 seats
-  const rows = [];
-  const rowLabels = 'ABCDEFGHIJ'.split('');
+// ── Helpers ───────────────────────────────────────────────
+const rowLabels = 'ABCDEFGHIJKLMNOP'.split('');
+
+const generateSeats = (totalSeats, isSleeper) => {
+  // Sleeper: each "row" has 4 berths — L (lower) and U (upper) per side
+  // e.g. A1L, A1U, A2L, A2U  (left side) | A3L, A3U, A4L, A4U (right side)
+  // Regular: A1, A2 | A3, A4
   const seatsPerRow = 4;
   const numRows = Math.ceil(totalSeats / seatsPerRow);
+  const rows = [];
 
   for (let i = 0; i < numRows; i++) {
-    const rowLabel = rowLabels[i] || String.fromCharCode(65 + i);
-    const rowSeats = [];
-    for (let j = 1; j <= seatsPerRow; j++) {
-      const seatId = `${rowLabel}${j}`;
-      rowSeats.push(seatId);
+    const label = rowLabels[i] || String.fromCharCode(65 + i);
+    if (isSleeper) {
+      rows.push({
+        label,
+        left:  [{ id: `${label}1L`, berth: 'L' }, { id: `${label}1U`, berth: 'U' }],
+        right: [{ id: `${label}2L`, berth: 'L' }, { id: `${label}2U`, berth: 'U' }],
+      });
+    } else {
+      rows.push({
+        label,
+        left:  [{ id: `${label}1` }, { id: `${label}2` }],
+        right: [{ id: `${label}3` }, { id: `${label}4` }],
+      });
     }
-    rows.push({ label: rowLabel, seats: rowSeats });
+  }
+  return rows;
+};
+
+// ── Seat Button ───────────────────────────────────────────
+const SeatBtn = ({ seatId, status, berth, isSleeper, onClick }) => {
+  const base = 'transition-all duration-150 flex flex-col items-center justify-center font-bold select-none';
+
+  const colorClass =
+    status === 'booked'   ? 'bg-red-50 border-red-300 text-red-400 cursor-not-allowed opacity-70' :
+    status === 'selected' ? 'bg-blue-600 border-blue-700 text-white shadow-lg shadow-blue-200 scale-105' :
+                            'bg-emerald-50 border-emerald-400 text-emerald-700 hover:bg-emerald-100 hover:scale-105 cursor-pointer';
+
+  if (isSleeper) {
+    // Sleeper berth — wider, shows L/U label
+    return (
+      <button
+        onClick={() => status !== 'booked' && onClick(seatId)}
+        disabled={status === 'booked'}
+        title={`${seatId} — ${berth === 'L' ? 'Lower' : 'Upper'} berth — ${status}`}
+        className={`${base} ${colorClass} w-14 h-10 rounded-lg border-2 text-xs`}
+      >
+        <span className="text-[10px] leading-none opacity-70">{berth === 'L' ? '▼ Lower' : '▲ Upper'}</span>
+        <span className="text-xs leading-none mt-0.5">{seatId}</span>
+      </button>
+    );
   }
 
-  const getSeatStatus = (seatId) => {
+  // Regular seat — chair shape (rounded top)
+  return (
+    <button
+      onClick={() => status !== 'booked' && onClick(seatId)}
+      disabled={status === 'booked'}
+      title={`Seat ${seatId} — ${status}`}
+      className={`${base} ${colorClass} w-10 h-10 rounded-t-xl border-2 text-xs`}
+    >
+      {seatId}
+    </button>
+  );
+};
+
+// ── Main SeatLayout Component ─────────────────────────────
+const SeatLayout = ({ totalSeats, bookedSeats, selectedSeats, onSeatClick, isSleeper = false }) => {
+  const rows = generateSeats(totalSeats, isSleeper);
+
+  const getStatus = (seatId) => {
     if (bookedSeats.includes(seatId)) return 'booked';
     if (selectedSeats.includes(seatId)) return 'selected';
     return 'available';
   };
 
-  const getSeatClass = (status) => {
-    switch (status) {
-      case 'booked': return 'seat seat-booked';
-      case 'selected': return 'seat seat-selected';
-      default: return 'seat seat-available';
-    }
-  };
-
-  const handleSeatClick = (seatId) => {
-    const status = getSeatStatus(seatId);
-    if (status === 'booked') return;
-    onSeatClick(seatId);
-  };
-
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-md">
-      {/* Bus front indicator */}
-      <div className="flex justify-center mb-6">
-        <div className="bg-gray-800 text-white text-xs px-6 py-2 rounded-t-3xl font-medium flex items-center space-x-2">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-          </svg>
-          <span>DRIVER</span>
+    <div className="bg-white rounded-2xl p-5 shadow-md">
+
+      {/* Bus front */}
+      <div className="flex justify-center mb-5">
+        <div className="bg-gray-800 text-white text-xs px-8 py-2 rounded-t-3xl font-medium flex items-center gap-2">
+          <span>🚌</span>
+          <span>DRIVER / FRONT</span>
         </div>
       </div>
 
       {/* Bus body */}
       <div className="border-2 border-gray-300 rounded-2xl p-4 bg-gray-50">
+
         {/* Column headers */}
-        <div className="flex items-center mb-3">
-          <div className="w-8"></div>
-          <div className="flex-1 grid grid-cols-2 gap-1 mr-4">
-            <div className="text-center text-xs text-gray-400 font-medium">Window</div>
-            <div className="text-center text-xs text-gray-400 font-medium">Aisle</div>
+        <div className="flex items-center mb-3 text-xs text-gray-400 font-medium">
+          <div className="w-8" />
+          <div className="flex-1 flex justify-end gap-1 mr-3">
+            {isSleeper ? (
+              <><span className="w-14 text-center">Left</span></>
+            ) : (
+              <><span className="w-10 text-center">Win</span><span className="w-10 text-center">Aisle</span></>
+            )}
           </div>
-          <div className="w-8 text-center text-xs text-gray-300">|</div>
-          <div className="flex-1 grid grid-cols-2 gap-1 ml-4">
-            <div className="text-center text-xs text-gray-400 font-medium">Aisle</div>
-            <div className="text-center text-xs text-gray-400 font-medium">Window</div>
+          <div className="w-6 text-center text-gray-200 text-base">|</div>
+          <div className="flex-1 flex justify-start gap-1 ml-3">
+            {isSleeper ? (
+              <><span className="w-14 text-center">Right</span></>
+            ) : (
+              <><span className="w-10 text-center">Aisle</span><span className="w-10 text-center">Win</span></>
+            )}
           </div>
         </div>
 
-        {/* Seat rows */}
+        {/* Rows */}
         <div className="space-y-2">
-          {rows.map(({ label, seats }) => (
+          {rows.map(({ label, left, right }) => (
             <div key={label} className="flex items-center">
               {/* Row label */}
               <div className="w-8 text-center text-xs font-bold text-gray-500">{label}</div>
 
-              {/* Left side seats (1, 2) */}
-              <div className="flex-1 flex justify-end space-x-1 mr-4">
-                {seats.slice(0, 2).map(seatId => {
-                  const status = getSeatStatus(seatId);
-                  return (
-                    <button
-                      key={seatId}
-                      onClick={() => handleSeatClick(seatId)}
-                      disabled={status === 'booked'}
-                      className={getSeatClass(status)}
-                      title={`Seat ${seatId} - ${status}`}
-                    >
-                      {seatId}
-                    </button>
-                  );
-                })}
+              {/* Left seats */}
+              <div className="flex-1 flex justify-end gap-1 mr-3">
+                {isSleeper ? (
+                  <div className="flex flex-col gap-1">
+                    {left.map(({ id, berth }) => (
+                      <SeatBtn key={id} seatId={id} berth={berth}
+                        status={getStatus(id)} isSleeper onClick={onSeatClick} />
+                    ))}
+                  </div>
+                ) : (
+                  left.map(({ id }) => (
+                    <SeatBtn key={id} seatId={id}
+                      status={getStatus(id)} isSleeper={false} onClick={onSeatClick} />
+                  ))
+                )}
               </div>
 
               {/* Aisle */}
-              <div className="w-8 flex items-center justify-center">
-                <div className="w-0.5 h-8 bg-gray-300 rounded"></div>
+              <div className="w-6 flex items-center justify-center">
+                <div className={`w-0.5 bg-gray-300 rounded ${isSleeper ? 'h-20' : 'h-10'}`} />
               </div>
 
-              {/* Right side seats (3, 4) */}
-              <div className="flex-1 flex justify-start space-x-1 ml-4">
-                {seats.slice(2, 4).map(seatId => {
-                  const status = getSeatStatus(seatId);
-                  return (
-                    <button
-                      key={seatId}
-                      onClick={() => handleSeatClick(seatId)}
-                      disabled={status === 'booked'}
-                      className={getSeatClass(status)}
-                      title={`Seat ${seatId} - ${status}`}
-                    >
-                      {seatId}
-                    </button>
-                  );
-                })}
+              {/* Right seats */}
+              <div className="flex-1 flex justify-start gap-1 ml-3">
+                {isSleeper ? (
+                  <div className="flex flex-col gap-1">
+                    {right.map(({ id, berth }) => (
+                      <SeatBtn key={id} seatId={id} berth={berth}
+                        status={getStatus(id)} isSleeper onClick={onSeatClick} />
+                    ))}
+                  </div>
+                ) : (
+                  right.map(({ id }) => (
+                    <SeatBtn key={id} seatId={id}
+                      status={getStatus(id)} isSleeper={false} onClick={onSeatClick} />
+                  ))
+                )}
               </div>
             </div>
           ))}
@@ -118,22 +162,34 @@ const SeatLayout = ({ totalSeats, bookedSeats, selectedSeats, onSeatClick }) => 
       </div>
 
       {/* Legend */}
-      <div className="flex items-center justify-center space-x-6 mt-5 pt-4 border-t border-gray-100">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-t-xl bg-green-100 border-2 border-green-400"></div>
+      <div className="flex flex-wrap items-center justify-center gap-5 mt-5 pt-4 border-t border-gray-100">
+        <div className="flex items-center gap-2">
+          <div className={`border-2 border-emerald-400 bg-emerald-50 ${isSleeper ? 'w-10 h-7 rounded-lg' : 'w-8 h-8 rounded-t-xl'}`} />
           <span className="text-xs text-gray-600 font-medium">Available</span>
         </div>
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-t-xl bg-blue-500 border-2 border-blue-600"></div>
+        <div className="flex items-center gap-2">
+          <div className={`border-2 border-blue-600 bg-blue-600 ${isSleeper ? 'w-10 h-7 rounded-lg' : 'w-8 h-8 rounded-t-xl'}`} />
           <span className="text-xs text-gray-600 font-medium">Selected</span>
         </div>
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-t-xl bg-red-100 border-2 border-red-400 opacity-70"></div>
+        <div className="flex items-center gap-2">
+          <div className={`border-2 border-red-300 bg-red-50 opacity-70 ${isSleeper ? 'w-10 h-7 rounded-lg' : 'w-8 h-8 rounded-t-xl'}`} />
           <span className="text-xs text-gray-600 font-medium">Booked</span>
         </div>
+        {isSleeper && (
+          <>
+            <div className="flex items-center gap-2">
+              <span className="text-xs bg-gray-100 px-2 py-1 rounded font-medium">▼ Lower</span>
+              <span className="text-xs text-gray-600">Lower berth</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs bg-gray-100 px-2 py-1 rounded font-medium">▲ Upper</span>
+              <span className="text-xs text-gray-600">Upper berth</span>
+            </div>
+          </>
+        )}
       </div>
 
-      {/* Selected seats summary */}
+      {/* Selected summary */}
       {selectedSeats.length > 0 && (
         <div className="mt-4 p-3 bg-blue-50 rounded-xl border border-blue-200">
           <p className="text-sm font-medium text-blue-800">

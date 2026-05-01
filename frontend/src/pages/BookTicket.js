@@ -104,6 +104,7 @@ const BookTicket = () => {
                 bookedSeats={bus.bookedSeats}
                 selectedSeats={selectedSeats}
                 onSeatClick={handleSeatClick}
+                isSleeper={bus.isSleeper || false}
               />
             </div>
           </div>

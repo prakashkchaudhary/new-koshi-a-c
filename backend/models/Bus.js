@@ -52,6 +52,10 @@ const busSchema = new mongoose.Schema({
     type: String,
     default: 'AC Sleeper'
   },
+  isSleeper: {
+    type: Boolean,
+    default: false
+  },
   isActive: {
     type: Boolean,
     default: true
