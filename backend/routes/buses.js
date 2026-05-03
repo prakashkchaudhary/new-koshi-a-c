@@ -74,7 +74,8 @@ router.post('/', protect, adminOnly, upload.single('image'), async (req, res) =>
       totalSeats: Math.min(100, Math.max(1, Number(totalSeats) || 40)),
       amenities: amenities ? safeJsonParse(amenities, ['AC']) : ['AC'],
       busType: String(busType || 'AC Sleeper').slice(0, 100),
-      isSleeper: req.body.isSleeper === 'true' || req.body.isSleeper === true
+      isSleeper: req.body.isSleeper === 'true' || req.body.isSleeper === true,
+      bookedSeats: req.body.blockedSeats ? safeJsonParse(req.body.blockedSeats, []) : []
     };
 
     if (req.file) {
@@ -114,6 +115,7 @@ router.put('/:id', protect, adminOnly, upload.single('image'), async (req, res) 
     if (busType) updateData.busType = String(busType).slice(0, 100);
     if (isActive !== undefined) updateData.isActive = isActive === 'true' || isActive === true;
     if (req.body.isSleeper !== undefined) updateData.isSleeper = req.body.isSleeper === 'true' || req.body.isSleeper === true;
+    if (req.body.blockedSeats !== undefined) updateData.bookedSeats = safeJsonParse(req.body.blockedSeats, []);
     if (req.file) {
       updateData.image = `/uploads/${req.file.filename}`;
     } else if (req.body.imageUrl) {
