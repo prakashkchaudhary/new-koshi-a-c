@@ -11,6 +11,7 @@ const busRoutes = require('./routes/buses');
 const bookingRoutes = require('./routes/bookings');
 const companyRoutes = require('./routes/company');
 const contactRoutes = require('./routes/contact');
+const { startSeatRefreshJob, startCleanupJob } = require('./jobs/seatRefresh');
 
 const app = express();
 
@@ -99,6 +100,11 @@ process.on('unhandledRejection', (reason, promise) => {
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('✅ Connected to MongoDB');
+    
+    // Start cron jobs for seat refresh and cleanup
+    startSeatRefreshJob();
+    startCleanupJob();
+    
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`🚀 Server running on port ${PORT} [${process.env.NODE_ENV || 'development'}]`);

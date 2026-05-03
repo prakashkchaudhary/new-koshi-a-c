@@ -24,10 +24,23 @@ router.post('/book-ticket', protect, async (req, res) => {
     if (isNaN(travel.getTime())) {
       return res.status(400).json({ success: false, message: 'Invalid travel date' });
     }
+    
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    
     if (travel < today) {
       return res.status(400).json({ success: false, message: 'Travel date cannot be in the past' });
+    }
+    
+    // Restrict booking to next 7 days only
+    const maxBookingDate = new Date(today);
+    maxBookingDate.setDate(maxBookingDate.getDate() + 7);
+    
+    if (travel > maxBookingDate) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Bookings are only available for the next 7 days. Please select a date within the next week.' 
+      });
     }
 
     // Sanitize seat labels

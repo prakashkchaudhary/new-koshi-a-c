@@ -18,6 +18,9 @@ const BookTicket = () => {
   const [booking, setBooking] = useState(false);
 
   const today = new Date().toISOString().split('T')[0];
+  const maxDate = new Date();
+  maxDate.setDate(maxDate.getDate() + 7);
+  const maxDateStr = maxDate.toISOString().split('T')[0];
 
   useEffect(() => {
     api.get(`/buses/${busId}`)
@@ -85,9 +88,13 @@ const BookTicket = () => {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl shadow-md p-6 mb-6">
               <h2 className="text-xl font-bold text-gray-900 mb-4">Select Travel Date</h2>
+              <p className="text-sm text-gray-500 mb-3">
+                📅 Bookings available for the next 7 days only
+              </p>
               <input
                 type="date"
                 min={today}
+                max={maxDateStr}
                 value={travelDate}
                 onChange={e => setTravelDate(e.target.value)}
                 className="w-full md:w-64 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
