@@ -87,7 +87,22 @@ const Bookings = () => {
                       <td className="py-4 px-6 text-gray-600">
                         {new Date(booking.travelDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </td>
-                      <td className="py-4 px-6 text-gray-600">{booking.seats?.join(', ')}</td>
+                      <td className="py-4 px-6 text-gray-600">
+                        <div className="flex flex-wrap gap-1 items-center">
+                          {booking.seats?.map((seat, idx) => {
+                            const isLower = seat.endsWith('L');
+                            const isUpper = seat.endsWith('U');
+                            const isSleeper = isLower || isUpper;
+                            return (
+                              <span key={seat} className="inline-flex items-center">
+                                {idx > 0 && <span className="mr-1">,</span>}
+                                {isSleeper && <span className="text-xs text-amber-600 mr-0.5">{isLower ? '▼' : '▲'}</span>}
+                                <span className="font-medium">{seat}</span>
+                              </span>
+                            );
+                          })}
+                        </div>
+                      </td>
                       <td className="py-4 px-6 font-bold text-blue-700">रू {booking.totalPrice}</td>
                       <td className="py-4 px-6">
                         <span className={`text-xs px-2 py-1 rounded-full font-semibold ${

@@ -89,7 +89,21 @@ const MyBookings = () => {
                           <div className="flex flex-wrap gap-4 text-sm text-gray-500">
                             <span>📅 {new Date(booking.travelDate).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}</span>
                             <span>🕐 {bus?.departureTime}</span>
-                            <span>💺 Seats: {booking.seats.join(', ')}</span>
+                            <span className="flex items-center gap-1">
+                              {bus?.isSleeper ? '🛏️' : '💺'} Seats: 
+                              {booking.seats.map((seat, idx) => {
+                                const isLower = seat.endsWith('L');
+                                const isUpper = seat.endsWith('U');
+                                const isSleeper = isLower || isUpper;
+                                return (
+                                  <span key={seat} className="inline-flex items-center">
+                                    {idx > 0 && ', '}
+                                    {isSleeper && <span className="text-xs mx-0.5">{isLower ? '▼' : '▲'}</span>}
+                                    <span className="font-medium">{seat}</span>
+                                  </span>
+                                );
+                              })}
+                            </span>
                           </div>
                         </div>
 

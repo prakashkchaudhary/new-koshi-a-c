@@ -111,13 +111,27 @@ const BookingConfirmation = () => {
 
             {/* Seats */}
             <div className="bg-blue-50 rounded-xl p-4 mb-6">
-              <p className="text-xs text-gray-400 mb-2">SELECTED SEATS</p>
+              <p className="text-xs text-gray-400 mb-2">SELECTED SEATS {bus?.isSleeper && <span className="text-amber-600 font-semibold ml-2">🛏️ Sleeper</span>}</p>
               <div className="flex flex-wrap gap-2">
-                {booking.seats.map(seat => (
-                  <span key={seat} className="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm font-bold">
-                    {seat}
-                  </span>
-                ))}
+                {booking.seats.map(seat => {
+                  const isLower = seat.endsWith('L');
+                  const isUpper = seat.endsWith('U');
+                  const isSleeper = isLower || isUpper;
+                  
+                  return (
+                    <span key={seat} className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm font-bold flex items-center gap-1">
+                      {isSleeper && (
+                        <span className="text-xs opacity-75">{isLower ? '▼' : '▲'}</span>
+                      )}
+                      {seat}
+                      {isSleeper && (
+                        <span className="text-[10px] opacity-60 ml-0.5">
+                          {isLower ? 'Lower' : 'Upper'}
+                        </span>
+                      )}
+                    </span>
+                  );
+                })}
               </div>
             </div>
 

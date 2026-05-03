@@ -13,26 +13,62 @@ const defaultForm = {
 
 // ── Seat Layout Builder ───────────────────────────────────
 const SeatLayoutBuilder = ({ totalSeats, blockedSeats, onChange, isSleeper }) => {
-  const rowLabels = 'ABCDEFGHIJKLMNOP'.split('');
-  const seatsPerRow = isSleeper ? 4 : 4; // 4 berths or 4 seats
-  const numRows = Math.ceil(totalSeats / seatsPerRow);
   const rows = [];
-
-  for (let i = 0; i < numRows; i++) {
-    const label = rowLabels[i] || String.fromCharCode(65 + i);
-    if (isSleeper) {
-      rows.push({
-        label,
-        left:  [{ id: `${label}1L` }, { id: `${label}1U` }],
-        right: [{ id: `${label}2L` }, { id: `${label}2U` }],
-      });
-    } else {
-      rows.push({
-        label,
-        left:  [{ id: `${label}1` }, { id: `${label}2` }],
-        right: [{ id: `${label}3` }, { id: `${label}4` }],
-      });
-    }
+  
+  // Special first row
+  rows.push({
+    label: '',
+    left: [{ id: 'C1' }],
+    middle: [],
+    right: [{ id: 'J1' }, { id: 'J2' }],
+  });
+  
+  // Second row
+  rows.push({
+    label: '',
+    left: [{ id: 'A' }],
+    middle: [{ id: 'B' }],
+    right: [{ id: 'KA' }, { id: 'Kha' }],
+  });
+  
+  // Third row
+  rows.push({
+    label: '',
+    left: [{ id: 'C' }],
+    middle: [{ id: 'D' }],
+    right: [{ id: 'GA' }, { id: 'GHA' }],
+  });
+  
+  // Regular numbered rows
+  const regularRowCount = isSleeper ? 10 : 12;
+  
+  for (let i = 1; i <= regularRowCount; i++) {
+    rows.push({
+      label: '',
+      left: [{ id: `A${i}` }],
+      middle: [{ id: `A${i + 1}` }],
+      right: [{ id: `B${i}` }, { id: `B${i + 1}` }],
+    });
+    i++;
+  }
+  
+  // Add sleeper berth rows
+  if (isSleeper) {
+    rows.push({
+      label: '',
+      left: [{ id: 'A13L', label: 'berth' }],
+      middle: [{ id: 'A14L', label: 'berth' }],
+      right: [{ id: 'B13L', label: 'berth' }, { id: 'B14L', label: 'berth' }],
+      isSleeper: true
+    });
+    
+    rows.push({
+      label: '',
+      left: [{ id: 'A13U', label: 'seep' }],
+      middle: [{ id: 'A14U', label: 'seep' }],
+      right: [{ id: 'B13U', label: 'seep' }, { id: 'B14U', label: 'seep' }],
+      isSleeper: true
+    });
   }
 
   const toggle = (seatId) => {
@@ -46,7 +82,7 @@ const SeatLayoutBuilder = ({ totalSeats, blockedSeats, onChange, isSleeper }) =>
     <div className="bg-gray-50 rounded-2xl p-4 border border-gray-200">
       <p className="text-xs text-gray-500 mb-3 font-medium">
         Click seats to mark as <span className="text-red-500 font-bold">unavailable/blocked</span> (e.g. driver seat, reserved)
-        {isSleeper && <span className="ml-2 bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-semibold">🛏️ Sleeper Mode</span>}
+        {isSleeper && <span className="ml-2 bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-semibold">🛏️ +8 Sleeper Berths at End</span>}
       </p>
 
       {/* Bus front */}
@@ -60,83 +96,68 @@ const SeatLayoutBuilder = ({ totalSeats, blockedSeats, onChange, isSleeper }) =>
         {/* Header */}
         <div className="flex items-center mb-2 text-xs text-gray-400 font-medium">
           <div className="w-7" />
-          <div className="flex-1 flex justify-end gap-1 mr-3 text-center">
-            {isSleeper ? <span className="w-14">Left</span> : <><span className="w-9">Win</span><span className="w-9">Aisle</span></>}
+          <div className="flex-1 flex justify-end gap-1 mr-2 text-center">
+            <span className="w-9">Left</span>
+            <span className="w-9">Mid</span>
           </div>
           <div className="w-6 text-center text-gray-200">|</div>
-          <div className="flex-1 flex justify-start gap-1 ml-3 text-center">
-            {isSleeper ? <span className="w-14">Right</span> : <><span className="w-9">Aisle</span><span className="w-9">Win</span></>}
+          <div className="flex-1 flex justify-start gap-1 ml-2 text-center">
+            <span className="w-9">Right</span>
+            <span className="w-9"></span>
           </div>
         </div>
 
         <div className="space-y-1.5">
-          {rows.map(({ label, left, right }) => (
-            <div key={label} className="flex items-center">
-              <div className="w-7 text-center text-xs font-bold text-gray-500">{label}</div>
+          {rows.map((row, idx) => {
+            const { label, left, middle, right } = row;
+            return (
+              <div key={idx} className="flex items-center">
+                <div className="w-7 text-center text-xs font-bold text-gray-500">{label}</div>
 
-              {/* Left */}
-              <div className="flex-1 flex justify-end gap-1 mr-3">
-                {isSleeper ? (
-                  <div className="flex flex-col gap-1">
-                    {left.map(({ id }) => (
-                      <button key={id} type="button" onClick={() => toggle(id)}
-                        className={`w-14 h-8 rounded-lg border-2 text-[10px] font-bold transition-all ${
-                          blockedSeats.includes(id)
-                            ? 'bg-red-100 border-red-400 text-red-600'
-                            : 'bg-emerald-50 border-emerald-400 text-emerald-700 hover:bg-emerald-100'
-                        }`}>
-                        {id}
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  left.map(({ id }) => (
+                {/* Left + Middle */}
+                <div className="flex-1 flex justify-end gap-1 mr-2">
+                  {left.map(({ id, label: seatLabel }) => (
                     <button key={id} type="button" onClick={() => toggle(id)}
-                      className={`w-9 h-9 rounded-t-lg border-2 text-xs font-bold transition-all ${
+                      className={`w-9 h-9 rounded-t-lg border-2 text-[10px] font-bold transition-all ${
                         blockedSeats.includes(id)
                           ? 'bg-red-100 border-red-400 text-red-600'
                           : 'bg-emerald-50 border-emerald-400 text-emerald-700 hover:bg-emerald-100'
                       }`}>
-                      {id}
+                      {seatLabel || id}
                     </button>
-                  ))
-                )}
-              </div>
-
-              <div className="w-6 flex justify-center">
-                <div className={`w-0.5 bg-gray-300 rounded ${isSleeper ? 'h-16' : 'h-9'}`} />
-              </div>
-
-              {/* Right */}
-              <div className="flex-1 flex justify-start gap-1 ml-3">
-                {isSleeper ? (
-                  <div className="flex flex-col gap-1">
-                    {right.map(({ id }) => (
-                      <button key={id} type="button" onClick={() => toggle(id)}
-                        className={`w-14 h-8 rounded-lg border-2 text-[10px] font-bold transition-all ${
-                          blockedSeats.includes(id)
-                            ? 'bg-red-100 border-red-400 text-red-600'
-                            : 'bg-emerald-50 border-emerald-400 text-emerald-700 hover:bg-emerald-100'
-                        }`}>
-                        {id}
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  right.map(({ id }) => (
+                  ))}
+                  {middle && middle.map(({ id, label: seatLabel }) => (
                     <button key={id} type="button" onClick={() => toggle(id)}
-                      className={`w-9 h-9 rounded-t-lg border-2 text-xs font-bold transition-all ${
+                      className={`w-9 h-9 rounded-t-lg border-2 text-[10px] font-bold transition-all ${
                         blockedSeats.includes(id)
                           ? 'bg-red-100 border-red-400 text-red-600'
                           : 'bg-emerald-50 border-emerald-400 text-emerald-700 hover:bg-emerald-100'
                       }`}>
-                      {id}
+                      {seatLabel || id}
                     </button>
-                  ))
-                )}
+                  ))}
+                </div>
+
+                <div className="w-6 flex justify-center">
+                  <div className="w-0.5 bg-gray-300 rounded h-9" />
+                </div>
+
+                {/* Right */}
+                <div className="flex-1 flex justify-start gap-1 ml-2">
+                  {right.map(({ id, label: seatLabel }) => (
+                    <button key={id} type="button" onClick={() => toggle(id)}
+                      className={`w-9 h-9 rounded-t-lg border-2 text-[10px] font-bold transition-all ${
+                        blockedSeats.includes(id)
+                          ? 'bg-red-100 border-red-400 text-red-600'
+                          : 'bg-emerald-50 border-emerald-400 text-emerald-700 hover:bg-emerald-100'
+                      }`}>
+                      {seatLabel || id}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -151,7 +172,18 @@ const SeatLayoutBuilder = ({ totalSeats, blockedSeats, onChange, isSleeper }) =>
           Blocked
         </span>
         {isSleeper && (
-          <span className="text-amber-600 font-semibold">🛏️ Sleeper: L=Lower, U=Upper</span>
+          <>
+            <span className="text-gray-300">|</span>
+            <span className="text-amber-600 font-semibold">🛏️ Sleeper Berths:</span>
+            <span className="flex items-center gap-1">
+              <span className="text-amber-700">▼</span>
+              <span className="text-gray-600">Lower</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="text-amber-700">▲</span>
+              <span className="text-gray-600">Upper</span>
+            </span>
+          </>
         )}
       </div>
 
@@ -486,25 +518,6 @@ const Buses = () => {
                           className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                         <p className="text-xs text-gray-400 mt-1">Separate each amenity with a comma</p>
                       </div>
-
-                      {/* Sleeper toggle */}
-                      <div className="col-span-2">
-                        <div className="flex items-center justify-between bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-                          <div>
-                            <p className="text-sm font-bold text-amber-800">Sleeper Bus Layout</p>
-                            <p className="text-xs text-amber-600 mt-0.5">Enable for upper/lower berth layout (2 berths per side per row)</p>
-                          </div>
-                          <button type="button"
-                            onClick={() => setForm(f => ({ ...f, isSleeper: f.isSleeper === 'true' ? 'false' : 'true' }))}
-                            className={`relative w-12 h-6 rounded-full transition-colors duration-200 ${
-                              form.isSleeper === 'true' ? 'bg-amber-500' : 'bg-gray-300'
-                            }`}>
-                            <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200 ${
-                              form.isSleeper === 'true' ? 'translate-x-6' : 'translate-x-0.5'
-                            }`} />
-                          </button>
-                        </div>
-                      </div>
                     </div>
                   )}
 
@@ -576,18 +589,58 @@ const Buses = () => {
                   {/* ── TAB: Seat Layout ── */}
                   {activeTab === 'seats' && (
                     <div className="space-y-4">
-                      <div className="flex items-center justify-between">
+
+                      {/* Controls row */}
+                      <div className="flex flex-wrap items-center justify-between gap-3">
                         <div>
                           <h3 className="font-bold text-gray-900">Seat Layout Configuration</h3>
-                          <p className="text-sm text-gray-500">Total seats: {form.totalSeats} · Layout: 2+2 per row</p>
+                          <p className="text-sm text-gray-500">
+                            {form.isSleeper === 'true'
+                              ? `🛏️ Custom layout — 1+1|2 configuration with 8 sleeper berths at end`
+                              : `💺 Custom layout — 1+1|2 configuration (${form.totalSeats} seats)`}
+                          </p>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
                           <label className="text-sm font-semibold text-gray-700">Total Seats:</label>
                           <input type="number" value={form.totalSeats}
                             onChange={e => { setForm({ ...form, totalSeats: e.target.value }); setBlockedSeats([]); }}
                             className="w-20 border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                             min="4" max="60" step="4" />
                         </div>
+                      </div>
+
+                      {/* Sleeper toggle — right here in seats tab */}
+                      <div className={`flex items-center justify-between rounded-xl px-4 py-3 border-2 transition-all ${
+                        form.isSleeper === 'true'
+                          ? 'bg-amber-50 border-amber-400'
+                          : 'bg-gray-50 border-gray-200'
+                      }`}>
+                        <div>
+                          <p className="text-sm font-bold text-gray-800">
+                            {form.isSleeper === 'true' ? '🛏️ Add 8 Sleeper Berths (Last 2 Rows)' : '💺 Regular Seats Only'}
+                          </p>
+                          <p className="text-xs text-gray-500 mt-0.5">
+                            {form.isSleeper === 'true'
+                              ? 'Last 2 rows will have sleeper berths (berth + seep), rest are regular seats'
+                              : 'All seats are regular — toggle to add sleeper berths at the end'}
+                          </p>
+                        </div>
+                        <button 
+                          type="button"
+                          onClick={() => {
+                            const newSleeperValue = form.isSleeper === 'true' ? 'false' : 'true';
+                            setForm(f => ({ ...f, isSleeper: newSleeperValue }));
+                            setBlockedSeats([]);
+                          }}
+                          className={`relative flex-shrink-0 w-14 h-7 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                            form.isSleeper === 'true' ? 'bg-amber-500 focus:ring-amber-400' : 'bg-gray-300 focus:ring-gray-400'
+                          }`}
+                          aria-label={`Toggle sleeper berths: currently ${form.isSleeper === 'true' ? 'enabled' : 'disabled'}`}
+                        >
+                          <span className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 ${
+                            form.isSleeper === 'true' ? 'translate-x-7' : 'translate-x-1'
+                          }`} />
+                        </button>
                       </div>
 
                       <SeatLayoutBuilder
@@ -600,10 +653,11 @@ const Buses = () => {
                       <div className="bg-blue-50 rounded-xl p-4 text-sm text-blue-800">
                         <p className="font-semibold mb-1">ℹ️ How this works:</p>
                         <ul className="text-xs space-y-1 text-blue-700">
-                          <li>• Green seats = available for booking</li>
-                          <li>• Red seats = blocked/unavailable (won't show as bookable)</li>
-                          <li>• Use this to mark driver seat, reserved seats, or broken seats</li>
-                          <li>• Existing bookings are not affected</li>
+                          <li>• <span className="text-emerald-600 font-semibold">Green</span> = available for booking</li>
+                          <li>• <span className="text-red-500 font-semibold">Red</span> = blocked (click to toggle)</li>
+                          <li>• Layout: 1 seat (left) + 1 seat (middle) | 2 seats (right)</li>
+                          <li>• When sleeper enabled, last 2 rows become berths (berth + seep)</li>
+                          <li>• Toggling sleeper mode clears blocked seats</li>
                         </ul>
                       </div>
                     </div>
