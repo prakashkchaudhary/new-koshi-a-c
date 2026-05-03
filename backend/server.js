@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const path = require('path');
 require('dotenv').config();
 
@@ -12,13 +11,40 @@ const bookingRoutes = require('./routes/bookings');
 const companyRoutes = require('./routes/company');
 const contactRoutes = require('./routes/contact');
 const { startSeatRefreshJob, startCleanupJob } = require('./jobs/seatRefresh');
+const {
+  authLimiter,
+  bookingLimiter,
+  apiLimiter,
+  sanitizeInput,
+  preventParameterPollution,
+  securityHeaders,
+  requestSizeLimiter
+} = require('./middleware/security');
 
 const app = express();
 
-// ── Security Headers (helmet) ─────────────────────────────
+// ── Security Headers ──────────────────────────────────────
+app.use(securityHeaders);
 app.use(helmet({
-  crossOriginResourcePolicy: { policy: 'cross-origin' }, // allow images cross-origin
-  contentSecurityPolicy: false, // CSP handled by frontend (would block backend images)
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", 'data:', 'https:'],
+      connectSrc: ["'self'"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"],
+    },
+  },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
 }));
 
 // ── CORS ──────────────────────────────────────────────────
@@ -42,38 +68,22 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// ── Global Rate Limiter ───────────────────────────────────
-const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 200,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { success: false, message: 'Too many requests, please try again later.' }
-});
-app.use(globalLimiter);
-
-// ── Auth Rate Limiter (stricter) ──────────────────────────
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { success: false, message: 'Too many login attempts, please try again in 15 minutes.' }
-});
-
-// ── Body Parsers ──────────────────────────────────────────
+// ── Request Size & Input Security ─────────────────────────
+app.use(requestSizeLimiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(sanitizeInput);
+app.use(preventParameterPollution);
 
 // ── Static uploads ────────────────────────────────────────
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// ── API Routes ────────────────────────────────────────────
+// ── API Routes with Rate Limiting ─────────────────────────
 app.use('/api/auth', authLimiter, authRoutes);
-app.use('/api/buses', busRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/company', companyRoutes);
-app.use('/api/contact', contactRoutes);
+app.use('/api/buses', apiLimiter, busRoutes);
+app.use('/api/bookings', bookingLimiter, bookingRoutes);
+app.use('/api/company', apiLimiter, companyRoutes);
+app.use('/api/contact', apiLimiter, contactRoutes);
 
 // ── Health check ──────────────────────────────────────────
 app.get('/api/health', (req, res) => {

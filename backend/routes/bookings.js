@@ -3,11 +3,18 @@ const router = express.Router();
 const Booking = require('../models/Booking');
 const Bus = require('../models/Bus');
 const { protect, adminOnly } = require('../middleware/auth');
+const { validateObjectId } = require('../middleware/security');
 
 // POST /api/bookings/book-ticket
 router.post('/book-ticket', protect, async (req, res) => {
   try {
     const { busId, seats, travelDate } = req.body;
+
+    // Validate busId format
+    const mongoose = require('mongoose');
+    if (!mongoose.Types.ObjectId.isValid(busId)) {
+      return res.status(400).json({ success: false, message: 'Invalid bus ID format' });
+    }
 
     // Input validation
     if (!busId || !seats || !Array.isArray(seats) || seats.length === 0 || !travelDate) {
@@ -151,7 +158,7 @@ router.get('/', protect, adminOnly, async (req, res) => {
 });
 
 // GET /api/bookings/:id
-router.get('/:id', protect, async (req, res) => {
+router.get('/:id', protect, validateObjectId('id'), async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id)
       .populate('userId', 'name email phone')
@@ -174,7 +181,7 @@ router.get('/:id', protect, async (req, res) => {
 });
 
 // PUT /api/bookings/:id/cancel
-router.put('/:id/cancel', protect, async (req, res) => {
+router.put('/:id/cancel', protect, validateObjectId('id'), async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
     if (!booking) {

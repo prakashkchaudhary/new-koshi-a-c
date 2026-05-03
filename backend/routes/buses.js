@@ -3,6 +3,7 @@ const router = express.Router();
 const Bus = require('../models/Bus');
 const { protect, adminOnly } = require('../middleware/auth');
 const upload = require('../middleware/upload');
+const { validateObjectId } = require('../middleware/security');
 
 const safeJsonParse = (str, fallback = []) => {
   try {
@@ -45,7 +46,7 @@ router.get('/admin/all', protect, adminOnly, async (req, res) => {
 });
 
 // GET /api/buses/:id — public
-router.get('/:id', async (req, res) => {
+router.get('/:id', validateObjectId('id'), async (req, res) => {
   try {
     const bus = await Bus.findById(req.params.id);
     if (!bus) return res.status(404).json({ success: false, message: 'Bus not found' });
@@ -93,7 +94,7 @@ router.post('/', protect, adminOnly, upload.single('image'), async (req, res) =>
 });
 
 // PUT /api/buses/:id — Admin
-router.put('/:id', protect, adminOnly, upload.single('image'), async (req, res) => {
+router.put('/:id', protect, adminOnly, validateObjectId('id'), upload.single('image'), async (req, res) => {
   try {
     const { name, routeFrom, routeTo, departureTime, arrivalTime, price, totalSeats, amenities, busType, isActive } = req.body;
 
@@ -133,7 +134,7 @@ router.put('/:id', protect, adminOnly, upload.single('image'), async (req, res) 
 });
 
 // DELETE /api/buses/:id — Admin
-router.delete('/:id', protect, adminOnly, async (req, res) => {
+router.delete('/:id', protect, adminOnly, validateObjectId('id'), async (req, res) => {
   try {
     const bus = await Bus.findByIdAndDelete(req.params.id);
     if (!bus) return res.status(404).json({ success: false, message: 'Bus not found' });
