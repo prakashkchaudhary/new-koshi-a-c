@@ -7,29 +7,40 @@ const BusCard = ({ bus }) => {
   const isFull = available === 0;
   const isAlmostFull = pct >= 70 && !isFull;
 
-  const API_BASE = (process.env.REACT_APP_API_URL || '').replace('/api', '');
+  // Get the correct image URL
+  const getImageUrl = () => {
+    if (!bus.image) return null;
+    // If it's a full URL (http/https), use it directly
+    if (bus.image.startsWith('http')) return bus.image;
+    // If it's a public folder image, use it directly
+    if (bus.image.startsWith('/images/')) return bus.image;
+    // If it's an uploaded image (starts with /uploads/), prepend the backend URL
+    if (bus.image.startsWith('/uploads/')) {
+      const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+      const backendUrl = apiBase.replace('/api', '');
+      return `${backendUrl}${bus.image}`;
+    }
+    // Fallback
+    return bus.image;
+  };
+
+  const imageUrl = getImageUrl();
 
   return (
     <div className="bg-white rounded-2xl shadow-card card-hover overflow-hidden border border-gray-100 flex flex-col">
 
       {/* ── Image / Banner ── */}
       <div className="relative h-44 bg-gradient-to-br from-blue-800 via-blue-700 to-indigo-800 overflow-hidden">
-        {bus.image ? (
+        {imageUrl ? (
           <img
-            src={
-              bus.image.startsWith('http')
-                ? bus.image
-                : bus.image.startsWith('/images/')
-                  ? bus.image
-                  : `${API_BASE}${bus.image}`
-            }
+            src={imageUrl}
             alt={bus.name}
             className="w-full h-full object-cover object-center"
             onError={e => { e.target.style.display = 'none'; }}
           />
         ) : null}
         {/* Fallback emoji — shown when no image or image fails */}
-        <div className={`w-full h-full flex flex-col items-center justify-center absolute inset-0 ${bus.image ? 'opacity-0' : 'opacity-100'}`}
+        <div className={`w-full h-full flex flex-col items-center justify-center absolute inset-0 ${imageUrl ? 'opacity-0' : 'opacity-100'}`}
              id={`fallback-${bus._id}`}>
           <span className="text-6xl mb-2 animate-float">🚌</span>
           <span className="text-blue-200 text-xs font-medium tracking-wide uppercase">{bus.busType}</span>

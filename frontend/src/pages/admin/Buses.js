@@ -325,7 +325,17 @@ const Buses = () => {
 
   const getBusImage = (bus) => {
     if (!bus.image) return null;
-    if (bus.image.startsWith('/images/') || bus.image.startsWith('http')) return bus.image;
+    // If it's a full URL (http/https), use it directly
+    if (bus.image.startsWith('http')) return bus.image;
+    // If it's a public folder image, use it directly
+    if (bus.image.startsWith('/images/')) return bus.image;
+    // If it's an uploaded image (starts with /uploads/), prepend the backend URL
+    if (bus.image.startsWith('/uploads/')) {
+      const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+      const backendUrl = apiBase.replace('/api', '');
+      return `${backendUrl}${bus.image}`;
+    }
+    // Fallback: prepend BASE_URL
     return `${BASE_URL}${bus.image}`;
   };
 
