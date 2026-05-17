@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../utils/api';
 import BusCard from '../components/BusCard';
 import LoadingSpinner from '../components/LoadingSpinner';
+import RouteMap from '../components/RouteMap';
 
 const StatItem = ({ value, label, icon }) => (
   <div className="text-center">
@@ -383,6 +384,25 @@ const Home = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
+          INTERACTIVE ROUTE MAP
+      ══════════════════════════════════════════════════════ */}
+      <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <p className="text-blue-600 font-semibold text-sm uppercase tracking-widest mb-2">Route Network</p>
+            <h2 className="section-title">Explore Our Routes on Map</h2>
+            <p className="section-subtitle">Interactive map showing all our bus routes across Nepal</p>
+          </div>
+          <RouteMap />
+          <div className="mt-8 text-center">
+            <p className="text-gray-500 text-sm">
+              💡 <strong>Tip:</strong> Click on bus terminals and route lines to see more details
+            </p>
           </div>
         </div>
       </section>
