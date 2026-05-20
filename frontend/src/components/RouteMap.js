@@ -18,10 +18,14 @@ const RouteMap = () => {
     muglin: { lat: 27.8167, lng: 84.5667, name: 'Muglin' },
     narayanghat: { lat: 27.7000, lng: 84.4333, name: 'Narayanghat' },
     hetauda: { lat: 27.4281, lng: 85.0325, name: 'Hetauda' },
+    butwal: { lat: 27.7000, lng: 83.4500, name: 'Butwal' },
+    sunauli: { lat: 27.5000, lng: 83.4167, name: 'Sunauli (Border)' },
+    gorakhpur: { lat: 26.7606, lng: 83.3732, name: 'Gorakhpur' },
     birgunj: { lat: 27.0000, lng: 84.8667, name: 'Birgunj' },
     raxaul: { lat: 26.9833, lng: 84.8500, name: 'Raxaul (Border)' },
     patna: { lat: 25.5941, lng: 85.1376, name: 'Patna' },
-    lucknow: { lat: 26.8467, lng: 80.9462, name: 'Lucknow' }
+    lucknow: { lat: 26.8467, lng: 80.9462, name: 'Lucknow' },
+    agra: { lat: 27.1767, lng: 78.0081, name: 'Agra (Expressway)' }
   }), []);
 
   // Bus routes with actual highway waypoints and booking info
@@ -90,14 +94,16 @@ const RouteMap = () => {
       color: '#F59E0B',
       waypoints: [
         cities.kathmandu,
-        cities.hetauda,
-        cities.birgunj,
-        cities.raxaul,
-        cities.patna,
+        cities.muglin,
+        cities.narayanghat,
+        cities.butwal,
+        cities.sunauli,
+        cities.gorakhpur,
         cities.lucknow,
+        cities.agra,
         cities.delhi
       ],
-      distance: '1,050 km',
+      distance: '1,100 km',
       duration: '24-26 hours',
       searchQuery: 'from=Kathmandu&to=Delhi',
       busIcon: '🚍',
@@ -202,7 +208,15 @@ const RouteMap = () => {
       iconAnchor: [5, 5],
     });
 
-    const waypoints = [cities.sindhuli, cities.muglin, cities.birgunj, cities.patna, cities.lucknow];
+    const waypoints = [
+      cities.sindhuli, 
+      cities.muglin, 
+      cities.butwal, 
+      cities.sunauli, 
+      cities.gorakhpur, 
+      cities.lucknow,
+      cities.agra
+    ];
     waypoints.forEach(city => {
       const marker = L.marker([city.lat, city.lng], { icon: waypointIcon }).addTo(map);
       marker.bindPopup(`
