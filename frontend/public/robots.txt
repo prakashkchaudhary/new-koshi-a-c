@@ -1,0 +1,27 @@
+# robots.txt for New Koshi A/C Yatayat
+
+User-agent: *
+Allow: /
+Allow: /buses
+Allow: /about
+Allow: /contact
+Allow: /login
+Allow: /register
+
+# Disallow admin and user-specific pages
+Disallow: /admin/
+Disallow: /my-bookings
+Disallow: /book/
+
+# Disallow API endpoints
+Disallow: /api/
+
+# Allow images and assets
+Allow: /images/
+Allow: /static/
+
+# Sitemap location
+Sitemap: https://new-koshi-a-c-three.vercel.app/sitemap.xml
+
+# Crawl-delay (optional, helps prevent server overload)
+Crawl-delay: 1

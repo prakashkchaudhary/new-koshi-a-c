@@ -3,6 +3,10 @@
   <head>
     <meta charset="utf-8" />
 
+    <!-- Google Search Console Verification -->
+    <!-- REPLACE THIS: Add your verification code from Google Search Console -->
+    <!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE_HERE" /> -->
+
     <!-- Favicon — uses your logo PNG directly -->
     <link rel="icon" type="image/png" href="%PUBLIC_URL%/logo.png" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo.png" />
@@ -10,18 +14,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#1e3a8a" />
 
-    <!-- SEO Meta -->
+    <!-- Enhanced SEO Meta Tags -->
     <meta name="description"
-      content="न्यू कोशी सुपर यातायात प्रा. लि. - Online bus ticket booking for Kathmandu-Dharan routes. Safe, comfortable AC bus service from Dharan-8, Sunsari, Nepal." />
+      content="Book AC bus tickets online for Kathmandu-Dharan routes. New Koshi A/C Yatayat offers safe, comfortable night & day services via BP Highway (Sindhuli) and Prithvi Highway. Online booking, GPS tracking, 24/7 support." />
     <meta name="keywords"
-      content="New Koshi, न्यू कोशी, bus booking, Kathmandu Dharan bus, Sindhuli route, Nepal bus ticket, Dharan Sunsari, पिण्डेश्वरी दर्शन" />
+      content="New Koshi bus booking, Kathmandu Dharan bus, Nepal bus ticket online, AC bus Nepal, Sindhuli route bus, BP Highway bus, Prithvi Highway bus, Dharan Sunsari bus, night bus Kathmandu, online bus booking Nepal, न्यू कोशी यातायात, काठमाडौं धरान बस" />
     <meta name="author" content="New Koshi Super Yatayat Pvt. Ltd." />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English, Nepali" />
+    <meta name="geo.region" content="NP" />
+    <meta name="geo.placename" content="Dharan, Sunsari, Nepal" />
+    <meta name="geo.position" content="26.8149;87.2824" />
+    <meta name="ICBM" content="26.8149, 87.2824" />
 
-    <!-- Open Graph (for social sharing) -->
-    <meta property="og:title" content="न्यू कोशी सुपर यातायात प्रा. लि." />
-    <meta property="og:description" content="Online bus ticket booking — Kathmandu ↔ Dharan via Sindhuli. Dharan-8, Sunsari, Nepal." />
+    <!-- Open Graph (Facebook, LinkedIn) -->
+    <meta property="og:site_name" content="New Koshi A/C Yatayat" />
+    <meta property="og:title" content="New Koshi A/C Yatayat - Online Bus Ticket Booking | Kathmandu ↔ Dharan" />
+    <meta property="og:description" content="Book AC bus tickets online for Kathmandu-Dharan routes. Safe, comfortable, GPS-tracked buses. Night & day services available." />
     <meta property="og:image" content="%PUBLIC_URL%/images/logo.png" />
+    <meta property="og:url" content="https://new-koshi-a-c-three.vercel.app" />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ne_NP" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="New Koshi A/C Yatayat - Bus Ticket Booking" />
+    <meta name="twitter:description" content="Book AC bus tickets for Kathmandu-Dharan routes. Safe, comfortable travel." />
+    <meta name="twitter:image" content="%PUBLIC_URL%/images/logo.png" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://new-koshi-a-c-three.vercel.app" />
 
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
@@ -35,7 +58,63 @@
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
       crossorigin=""></script>
 
-    <title>न्यू कोशी सुपर यातायात प्रा. लि. | Bus Ticket Booking</title>
+    <!-- Structured Data (JSON-LD) for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BusOrCoach",
+      "name": "New Koshi A/C Yatayat Pvt. Ltd.",
+      "alternateName": "न्यू कोशी सुपर यातायात प्रा. लि.",
+      "description": "Premium AC bus service between Kathmandu and Dharan with online booking, GPS tracking, and 24/7 customer support.",
+      "url": "https://new-koshi-a-c-three.vercel.app",
+      "logo": "https://new-koshi-a-c-three.vercel.app/logo.png",
+      "image": "https://new-koshi-a-c-three.vercel.app/images/bus-exterior.jpg.jpeg",
+      "telephone": "+977-XXX-XXXXXXX",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Dharan-8",
+        "addressLocality": "Dharan",
+        "addressRegion": "Sunsari",
+        "addressCountry": "NP"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "26.8149",
+        "longitude": "87.2824"
+      },
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "Kathmandu"
+        },
+        {
+          "@type": "City",
+          "name": "Dharan"
+        }
+      ],
+      "serviceType": "Bus Transportation",
+      "provider": {
+        "@type": "Organization",
+        "name": "New Koshi Super Yatayat Pvt. Ltd."
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "New Koshi A/C Yatayat",
+      "url": "https://new-koshi-a-c-three.vercel.app",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://new-koshi-a-c-three.vercel.app/buses?from={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <title>New Koshi A/C Yatayat | Online Bus Booking Kathmandu ↔ Dharan | Nepal</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
