@@ -170,3 +170,54 @@ body {
 .badge-confirmed { @apply bg-emerald-100 text-emerald-700 border border-emerald-200; }
 .badge-cancelled { @apply bg-red-100 text-red-700 border border-red-200; }
 .badge-pending   { @apply bg-amber-100 text-amber-700 border border-amber-200; }
+
+
+/* ── Map Animations ──────────────────────────────────────── */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s ease-in-out infinite;
+}
+
+/* ── Leaflet Popup Customization ─────────────────────────── */
+.leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2) !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+}
+
+.leaflet-popup-tip {
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ── Map Marker Hover Effects ────────────────────────────── */
+.custom-terminal-marker:hover {
+  z-index: 1000 !important;
+}
+
+.bus-marker-animated:hover {
+  z-index: 1000 !important;
+}
