@@ -178,13 +178,18 @@ router.post('/login', [
       });
     }
 
-    // Check if email is verified
-    if (!user.isEmailVerified) {
+    // Check if email is verified (can be disabled via environment variable)
+    if (process.env.SKIP_EMAIL_VERIFICATION !== 'true' && !user.isEmailVerified) {
       return res.status(403).json({ 
         success: false, 
         message: 'Please verify your email before logging in. Check your inbox for the verification link.',
         needsVerification: true
       });
+    }
+    
+    // Log if email verification is skipped
+    if (process.env.SKIP_EMAIL_VERIFICATION === 'true') {
+      console.log('⚠️  Email verification skipped (SKIP_EMAIL_VERIFICATION=true)');
     }
 
     // Reset login attempts on successful login
