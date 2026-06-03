@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LOGO_URL } from '../utils/constants';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import api from '../utils/api';
 import toast from 'react-hot-toast';
 
@@ -11,7 +11,6 @@ const Register = () => {
   const [registered, setRegistered] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState('');
   const [resending, setResending] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,7 +20,7 @@ const Register = () => {
     if (form.password.length < 6) { toast.error('Password must be at least 6 characters'); return; }
     setLoading(true);
     try {
-      const res = await api.post('/auth/register', form);
+      await api.post('/auth/register', form);
       setRegisteredEmail(form.email);
       setRegistered(true);
       toast.success('Registration successful! Check your email 📧');

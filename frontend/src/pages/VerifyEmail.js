@@ -14,25 +14,25 @@ const VerifyEmail = () => {
   const [showResend, setShowResend] = useState(false);
 
   useEffect(() => {
-    verifyEmail();
-  }, [token]);
+    const verifyEmail = async () => {
+      try {
+        const res = await api.get(`/auth/verify-email/${token}`);
+        setStatus('success');
+        setMessage(res.data.message);
+        
+        // Redirect to login after 3 seconds
+        setTimeout(() => {
+          navigate('/login');
+        }, 3000);
+      } catch (err) {
+        setStatus('error');
+        setMessage(err.response?.data?.message || 'Email verification failed. The link may be expired or invalid.');
+        setShowResend(true);
+      }
+    };
 
-  const verifyEmail = async () => {
-    try {
-      const res = await api.get(`/auth/verify-email/${token}`);
-      setStatus('success');
-      setMessage(res.data.message);
-      
-      // Redirect to login after 3 seconds
-      setTimeout(() => {
-        navigate('/login');
-      }, 3000);
-    } catch (err) {
-      setStatus('error');
-      setMessage(err.response?.data?.message || 'Email verification failed. The link may be expired or invalid.');
-      setShowResend(true);
-    }
-  };
+    verifyEmail();
+  }, [token, navigate]);
 
   const handleResendVerification = async (e) => {
     e.preventDefault();
