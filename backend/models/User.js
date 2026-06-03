@@ -31,6 +31,12 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user'
   },
+  isEmailVerified: {
+    type: Boolean,
+    default: false
+  },
+  emailVerificationToken: String,
+  emailVerificationExpires: Date,
   passwordChangedAt: Date,
   loginAttempts: {
     type: Number,
@@ -96,6 +102,21 @@ userSchema.methods.resetLoginAttempts = function () {
     $set: { loginAttempts: 0 },
     $unset: { lockUntil: 1 }
   });
+};
+
+// Generate email verification token
+userSchema.methods.createEmailVerificationToken = function () {
+  const crypto = require('crypto');
+  const verificationToken = crypto.randomBytes(32).toString('hex');
+  
+  this.emailVerificationToken = crypto
+    .createHash('sha256')
+    .update(verificationToken)
+    .digest('hex');
+  
+  this.emailVerificationExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+  
+  return verificationToken;
 };
 
 module.exports = mongoose.model('User', userSchema);
