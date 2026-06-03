@@ -1,220 +1,334 @@
-# SwiftRide Bus Ticket Booking System
+# 🚌 New Koshi A/C Yatayat - Bus Booking System
 
-A full-stack bus ticket booking web application with real-time seat selection, admin management, and JWT authentication.
-
-## Tech Stack
-
-- **Frontend**: React.js + Tailwind CSS
-- **Backend**: Node.js + Express
-- **Database**: MongoDB
-- **Auth**: JWT + bcrypt
+Modern bus ticket booking system for New Koshi A/C Yatayat with real-time seat selection, email verification, and secure payment processing.
 
 ---
 
-## Project Structure
+## 🚀 Features
 
-```
-bus-booking/
-├── backend/
-│   ├── middleware/       # auth.js, upload.js
-│   ├── models/           # User, Bus, Booking, Company, Contact
-│   ├── routes/           # auth, buses, bookings, company, contact
-│   ├── scripts/          # seed.js
-│   ├── uploads/          # uploaded images (auto-created)
-│   ├── .env.example
-│   ├── package.json
-│   └── server.js
-└── frontend/
-    ├── public/
-    ├── src/
-    │   ├── components/   # Navbar, Footer, BusCard, SeatLayout, etc.
-    │   ├── context/      # AuthContext
-    │   ├── pages/        # Home, About, BusDetails, BookTicket, etc.
-    │   │   └── admin/    # Dashboard, Buses, Bookings, Company, Contact
-    │   └── utils/        # api.js (axios instance)
-    ├── .env.example
-    └── package.json
-```
+- 🎫 **Real-time Seat Booking** - Interactive seat selection with live availability
+- 📧 **Email Verification** - Secure user registration with email confirmation
+- 🔒 **Secure Authentication** - JWT-based auth with account locking after failed attempts
+- 🗺️ **Interactive Route Map** - Leaflet map showing bus routes across Nepal
+- 💳 **eSewa Integration** - Secure online payment processing
+- 📱 **Responsive Design** - Works on desktop, tablet, and mobile
+- 🔄 **Auto Seat Refresh** - Seats auto-reset 24 hours after travel date
+- ⏰ **Booking Limits** - Maximum 7 days advance booking
+- 🛡️ **Security Features** - Rate limiting, input sanitization, XSS protection
 
 ---
 
-## Setup Instructions
+## 🛠️ Tech Stack
 
-### Prerequisites
-- Node.js v18+
-- MongoDB (local or Atlas)
-- npm or yarn
+### Frontend
+- React 18
+- React Router v6
+- Tailwind CSS
+- Leaflet Maps
+- Axios
+- React Hot Toast
+
+### Backend
+- Node.js + Express
+- MongoDB + Mongoose
+- JWT Authentication
+- Nodemailer (Email)
+- Helmet (Security)
+- Express Rate Limit
+- Node-Cron (Scheduled Jobs)
 
 ---
 
-### 1. Clone & Install
+## 📋 Prerequisites
 
+- Node.js 18+ and npm
+- MongoDB Atlas account or local MongoDB
+- Gmail account (for email) or SendGrid API key
+- eSewa Merchant account (for payments)
+
+---
+
+## ⚙️ Installation
+
+### 1. Clone Repository
 ```bash
-# Backend
-cd bus-booking/backend
-npm install
-
-# Frontend
-cd ../frontend
-npm install
+git clone <your-repo-url>
+cd bus-booking
 ```
 
----
+### 2. Install Dependencies
 
-### 2. Configure Environment
-
-**Backend** — copy `.env.example` to `.env`:
+**Backend:**
 ```bash
-cd bus-booking/backend
-cp .env.example .env
+cd backend
+npm install
 ```
 
-Edit `.env`:
+**Frontend:**
+```bash
+cd frontend
+npm install
 ```
+
+### 3. Environment Configuration
+
+**Backend** (`backend/.env`):
+```env
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/bus-booking
-JWT_SECRET=your_super_secret_key_change_this
-ADMIN_EMAIL=admin@busservice.com
-ADMIN_PASSWORD=admin123
+MONGODB_URI=<your-mongodb-connection-string>
+JWT_SECRET=<your-jwt-secret-min-32-chars>
 NODE_ENV=development
+FRONTEND_URL=http://localhost:3000
+
+# Email Configuration
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=<your-email@gmail.com>
+EMAIL_PASSWORD=<your-gmail-app-password>
+EMAIL_FROM=noreply@yourdomain.com
+EMAIL_FROM_NAME=New Koshi A/C Yatayat
+
+# Admin Account
+ADMIN_EMAIL=admin@yourdomain.com
+ADMIN_PASSWORD=<secure-admin-password>
+
+# Optional: Skip email verification for testing
+# SKIP_EMAIL_VERIFICATION=true
 ```
 
-**Frontend** — copy `.env.example` to `.env`:
-```bash
-cd bus-booking/frontend
-cp .env.example .env
-```
-
-Edit `.env`:
-```
+**Frontend** (`frontend/.env`):
+```env
 REACT_APP_API_URL=http://localhost:5000/api
 ```
 
----
-
-### 3. Seed the Database
-
-```bash
-cd bus-booking/backend
-npm run seed
-```
-
-This creates:
-- Admin user: `admin@busservice.com` / `admin123`
-- Sample user: `user@example.com` / `user123`
-- 5 sample buses
-- Company & contact info
+**⚠️ SECURITY: Never commit `.env` files to Git!**
 
 ---
 
-### 4. Run the Application
+## 🚀 Running Locally
 
-**Terminal 1 — Backend:**
+### Start Backend:
 ```bash
-cd bus-booking/backend
-npm run dev
-# Server runs on http://localhost:5000
-```
-
-**Terminal 2 — Frontend:**
-```bash
-cd bus-booking/frontend
+cd backend
 npm start
-# App runs on http://localhost:3000
+# or for development:
+npm run dev
+```
+Server runs on: http://localhost:5000
+
+### Start Frontend:
+```bash
+cd frontend
+npm start
+```
+App runs on: http://localhost:3000
+
+---
+
+## 📦 Deployment
+
+### Backend (Render)
+1. Push code to GitHub
+2. Create new Web Service on Render
+3. Connect to GitHub repository
+4. Set environment variables in Render dashboard
+5. Deploy automatically on git push
+
+### Frontend (Vercel)
+1. Push code to GitHub
+2. Import project on Vercel
+3. Connect to GitHub repository
+4. Set environment variables
+5. Deploy automatically on git push
+
+---
+
+## 🔒 Security Best Practices
+
+### Credentials Management:
+- ✅ Store all secrets in environment variables
+- ✅ Use `.gitignore` to exclude `.env` files
+- ✅ Never commit passwords or API keys
+- ✅ Rotate credentials regularly (every 90 days)
+- ✅ Use different credentials per environment
+
+### Database Security:
+- ✅ Enable MongoDB Atlas IP whitelist
+- ✅ Use strong, unique passwords
+- ✅ Enable database encryption at rest
+- ✅ Regular backups
+- ✅ Monitor access logs
+
+### Application Security:
+- ✅ Rate limiting enabled
+- ✅ Input sanitization
+- ✅ XSS protection
+- ✅ CSRF protection
+- ✅ Secure headers (Helmet)
+- ✅ Account locking after failed logins
+
+---
+
+## 📧 Email Configuration
+
+### Gmail Setup:
+1. Enable 2-Step Verification on Gmail
+2. Generate App Password:
+   - Google Account → Security → App Passwords
+   - Select "Mail" and generate
+   - Use 16-character password in `EMAIL_PASSWORD`
+
+### SendGrid (Recommended for Production):
+```env
+EMAIL_HOST=smtp.sendgrid.net
+EMAIL_PORT=587
+EMAIL_USER=apikey
+EMAIL_PASSWORD=<your-sendgrid-api-key>
 ```
 
 ---
 
-## API Endpoints
+## 🗺️ Routes
 
-### Auth
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/register` | Register new user |
-| POST | `/api/auth/login` | Login |
-| GET | `/api/auth/me` | Get current user |
+### Public Routes:
+- `/` - Home page with route map
+- `/buses` - Browse available buses
+- `/about` - About company
+- `/contact` - Contact form
+- `/login` - User login
+- `/register` - User registration
+- `/verify-email/:token` - Email verification
+
+### Protected Routes:
+- `/my-bookings` - User's booking history
+- `/book/:busId` - Book bus tickets
+- `/booking-confirmation/:id` - Booking confirmation
+
+### Admin Routes:
+- `/admin` - Admin dashboard
+- `/admin/buses` - Manage buses
+- `/admin/bookings` - View all bookings
+- `/admin/company` - Company settings
+- `/admin/contact` - Contact inquiries
+
+---
+
+## 🛠️ Scripts
+
+### Backend:
+```bash
+npm start              # Start production server
+npm run dev            # Start development server with nodemon
+npm run seed           # Seed database with initial data
+npm run verify-all-users        # Verify all existing users
+npm run verify-user <email>     # Verify specific user by email
+```
+
+### Frontend:
+```bash
+npm start              # Start development server
+npm run build          # Build for production
+```
+
+---
+
+## 🔧 Troubleshooting
+
+### Email Verification Not Working:
+1. Check email credentials in Render
+2. Verify Gmail App Password is correct
+3. Check Render logs for email errors
+4. Temporarily disable: `SKIP_EMAIL_VERIFICATION=true`
+
+### Can't Login:
+1. Verify email is confirmed
+2. Check account isn't locked (5 failed attempts = 2hr lock)
+3. Clear browser cache and try incognito
+4. Check backend logs for specific error
+
+### Database Connection Issues:
+1. Verify MongoDB URI is correct
+2. Check IP whitelist in MongoDB Atlas
+3. Ensure network allows MongoDB ports
+4. Check MongoDB Atlas status
+
+---
+
+## 📊 Database Schema
+
+### Users
+- name, email, password (hashed)
+- phone, role (user/admin)
+- isEmailVerified, emailVerificationToken
+- loginAttempts, lockUntil
+- isActive
 
 ### Buses
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/buses` | Public | Get all active buses |
-| GET | `/api/buses/:id` | Public | Get single bus |
-| GET | `/api/buses/admin/all` | Admin | Get all buses |
-| POST | `/api/buses` | Admin | Add bus |
-| PUT | `/api/buses/:id` | Admin | Update bus |
-| DELETE | `/api/buses/:id` | Admin | Delete bus |
+- name, busNumber, type (AC/Non-AC)
+- route (from, to, via)
+- timings (departure, arrival, duration)
+- seats (total, layout, booked, blocked)
+- pricing, amenities, images
 
 ### Bookings
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/bookings/book-ticket` | User | Book a ticket |
-| GET | `/api/bookings/my-bookings` | User | Get user's bookings |
-| GET | `/api/bookings` | Admin | Get all bookings |
-| GET | `/api/bookings/:id` | User/Admin | Get single booking |
-| PUT | `/api/bookings/:id/cancel` | User/Admin | Cancel booking |
-
-### Company & Contact
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/company` | Public | Get company info |
-| PUT | `/api/company` | Admin | Update company info |
-| GET | `/api/contact` | Public | Get contact info |
-| PUT | `/api/contact` | Admin | Update contact info |
+- user, bus, travelDate
+- seats, passengers
+- totalAmount, paymentStatus
+- paymentMethod, bookingStatus
 
 ---
 
-## Features
+## 🤝 Contributing
 
-### User Features
-- Register & login with JWT
-- Browse available buses with search/filter
-- Real-time 2+2 AC coach seat selection (green/blue/red)
-- Book tickets with date selection
-- View booking confirmation with ticket ID
-- Cancel bookings
-- Booking history
-
-### Admin Features
-- Dashboard with stats (buses, bookings, revenue)
-- Add/Edit/Delete buses with image upload
-- View and manage all bookings
-- Update company information
-- Update contact/representative info
-
-### Seat Layout
-- 2+2 AC coach layout (rows A-J, 40 seats)
-- Green = Available, Blue = Selected, Red = Booked
-- Visual aisle separator
-- Driver/front indicator
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
 
 ---
 
-## Deployment
+## 📄 License
 
-### Backend → Render
-1. Push to GitHub
-2. Create new Web Service on Render
-3. Set root directory to `bus-booking/backend`
-4. Build command: `npm install`
-5. Start command: `npm start`
-6. Add environment variables from `.env`
-
-### Frontend → Vercel
-1. Push to GitHub
-2. Import project on Vercel
-3. Set root directory to `bus-booking/frontend`
-4. Add `REACT_APP_API_URL=https://your-render-url.onrender.com/api`
-5. Deploy
+This project is proprietary software for New Koshi A/C Yatayat Pvt. Ltd.
 
 ---
 
-## Sample Test Data
+## 📞 Support
 
-After seeding, use these credentials:
+For issues or questions:
+- Email: support@newkoshi.com
+- Phone: +977 XXXX-XXXXXX
 
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@busservice.com | admin123 |
-| User | user@example.com | user123 |
+---
 
-Sample buses include routes: Dhaka→Chittagong, Dhaka→Sylhet, Dhaka→Rajshahi, Dhaka→Cox's Bazar
+## ⚠️ Important Security Note
+
+**If you've accidentally exposed credentials:**
+1. See `SECURITY-CLEANUP.md` for immediate actions
+2. Rotate all exposed credentials immediately
+3. Update environment variables in all deployments
+4. Monitor for suspicious activity
+
+---
+
+## 🎯 Production Checklist
+
+Before going live:
+- [ ] Changed default admin password
+- [ ] Configured production email service
+- [ ] Enabled MongoDB IP whitelist
+- [ ] Set up SSL/HTTPS
+- [ ] Configured proper CORS origins
+- [ ] Set `NODE_ENV=production`
+- [ ] Tested all user flows
+- [ ] Set up monitoring and logging
+- [ ] Backed up database
+- [ ] Reviewed security settings
+
+---
+
+**Version**: 1.0.0  
+**Last Updated**: June 3, 2026  
+**Company**: New Koshi A/C Yatayat Pvt. Ltd.  
+**Location**: Dharan-8, Sunsari, Nepal
