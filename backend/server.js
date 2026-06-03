@@ -11,6 +11,7 @@ const bookingRoutes = require('./routes/bookings');
 const companyRoutes = require('./routes/company');
 const contactRoutes = require('./routes/contact');
 const { startSeatRefreshJob, startCleanupJob } = require('./jobs/seatRefresh');
+const autoVerifyExistingUsers = require('./utils/autoVerifyExistingUsers');
 const {
   authLimiter,
   bookingLimiter,
@@ -108,8 +109,11 @@ process.on('unhandledRejection', (reason, promise) => {
 
 // ── Connect to MongoDB & start ────────────────────────────
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
+  .then(async () => {
     console.log('✅ Connected to MongoDB');
+    
+    // Auto-verify existing users (one-time on startup)
+    await autoVerifyExistingUsers();
     
     // Start cron jobs for seat refresh and cleanup
     startSeatRefreshJob();
